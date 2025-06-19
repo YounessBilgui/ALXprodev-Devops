@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# File: fetch_multiple_pokemon
+
+# Create output directory
+output_dir="pokemon_data"
+mkdir -p "$output_dir"
+
+# List of Pokémon (lowercase)
+pokemon_list=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
+
+# Loop through each Pokémon
+for pokemon in "${pokemon_list[@]}"; do
+    echo "Fetching data for $pokemon..."
+    
+    # Use PokéAPI
+    response=$(curl -s "https://pokeapi.co/api/v2/pokemon/$pokemon")
+
+    if [[ -n "$response" && "$response" != "Not Found" ]]; then
+        echo "$response" > "$output_dir/${pokemon}.json"
+        echo "Saved data to $output_dir/${pokemon}.json ✅"
+    else
+        echo "❌ Failed to fetch data for $pokemon"
+    fi
+
+    # Add delay to avoid rate limiting
+    sleep 2
+done
